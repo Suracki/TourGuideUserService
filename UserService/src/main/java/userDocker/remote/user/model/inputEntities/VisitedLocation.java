@@ -9,7 +9,7 @@ import java.util.UUID;
 public class VisitedLocation {
     public UUID userId;
     public Location location;
-    @JsonFormat(pattern="Month D, Yr'HH:mm:ss.SSS")
+    //@JsonFormat(pattern="Month D, Yr'HH:mm:ss.SSS")
     public Date timeVisited;
 
     public VisitedLocation() {

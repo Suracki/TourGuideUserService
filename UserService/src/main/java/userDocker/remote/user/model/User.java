@@ -94,6 +94,8 @@ public class User {
             userRewards.add(userReward);
             System.out.println("Adding: " + userReward.attraction.attractionName);
         }
+
+        System.out.println(userName + " User Rewards Size UPDATED: " +userRewards.size());
     }
 
     public List<UserReward> getUserRewards() {

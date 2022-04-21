@@ -46,7 +46,6 @@ public class UserService {
 	public String addToVisitedLocations(VisitedLocation visitedLocation, String userName) {
 		logger.debug("addToVisitedLocations called");
 		usersByName.get(userName).addToVisitedLocations(visitedLocation);
-		System.out.println("TEST END HERE. RETURNING: " + userName);
 		return userName;
 	}
 
@@ -62,6 +61,7 @@ public class UserService {
 
 	//TODO: add fail case for user not found
 	public boolean addUserReward(String userName, VisitedLocation visitedLocation, Attraction attraction, int rewardPoints) {
+		System.out.println("ADD USER REWARD");
 		logger.debug("addUserReward called");
 		User user = getUserByUsername(userName);
 		user.addUserReward(new UserReward(visitedLocation(visitedLocation), attraction, rewardPoints));
@@ -106,7 +106,7 @@ public class UserService {
 	//TODO: add fail case for user not found
 	public List<UserReward> getUserRewardsByUsername(String userName){
 		logger.debug("getUserRewardsByUsername called");
-		System.out.println("User Rewards Size: " + getUserByUsername(userName).getUserRewards().size());
+		System.out.println(userName + " User Rewards Size CURRENT: " + getUserByUsername(userName).getUserRewards().size());
 		return getUserByUsername(userName).getUserRewards();
 	}
 

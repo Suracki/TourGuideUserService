@@ -3,6 +3,10 @@ package userDocker.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gpsUtil.location.Attraction;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import userDocker.remote.user.model.inputEntities.UserAndReward;
 import userDocker.remote.user.model.inputEntities.VisitedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import userDocker.remote.user.gson.MoneyTypeAdapterFactory;
 import userDocker.remote.user.model.User;
 import userDocker.service.UserService;
+
+import java.util.List;
 
 @RestController
 public class UserServiceController {
@@ -38,7 +44,8 @@ public class UserServiceController {
         logger.info("/addToVisitedLocations endpoint called");
         String json = visitedLocation.substring(1, visitedLocation.length() - 1).replaceAll("\\\\","");
         VisitedLocation location = gson.fromJson(json, VisitedLocation.class);
-        return userService.addToVisitedLocations(location, userName);
+        String result = userService.addToVisitedLocations(location, userName);
+        return result;
     }
 
     @GetMapping("user/getAllCurrentLocations")
@@ -48,16 +55,27 @@ public class UserServiceController {
         return gson.toJson(userService.getAllCurrentLocations());
     }
 
+//    @PostMapping("user/addUserReward")
+//    public boolean addUserReward(@RequestParam String userName, @RequestParam VisitedLocation visitedLocation,
+//                                 @RequestParam Attraction attraction, @RequestParam int rewardPoints) {
+//        logger.info("/addUserReward endpoint called");
+//        return userService.addUserReward(userName, visitedLocation, attraction, rewardPoints);
+//    }
+
     @PostMapping("user/addUserReward")
-    public boolean addUserReward(@RequestParam String userName, @RequestParam VisitedLocation visitedLocation,
-                                 @RequestParam Attraction attraction, @RequestParam int rewardPoints) {
+    public boolean addUserReward(@RequestBody String userAndRewardJson) {
         logger.info("/addUserReward endpoint called");
-        return userService.addUserReward(userName, visitedLocation, attraction, rewardPoints);
+        System.out.println("Json received: " + userAndRewardJson);
+        String json = userAndRewardJson.substring(1, userAndRewardJson.length() - 1).replaceAll("\\\\","");
+        UserAndReward userAndReward = gson.fromJson(json, UserAndReward.class);
+//        VisitedLocation visitedLocation = gson.fromJson(visitedLocationJson, VisitedLocation.class);
+//        Attraction attraction = gson.fromJson(attractionJson, Attraction.class);
+        return userService.addUserReward(userAndReward.userName, userAndReward.visitedLocation,
+                userAndReward.attraction, userAndReward.rewardPoints);
     }
 
     @GetMapping("user/getAllUsers")
     public String getAllUsers() {
-        System.out.println("GET ALL USERS");
         logger.info("/getAllUsers endpoint called");
         //List<User>
         return gson.toJson(userService.getAllUsers());
@@ -85,12 +103,13 @@ public class UserServiceController {
     }
 
     @GetMapping("user/getVisitedLocationsByUsername")
-    public String getVisitedLocationsByUsername(String userName) {
+    public List<VisitedLocation> getVisitedLocationsByUsername(String userName) {
         logger.info("/getVisitedLocationsByUsername endpoint called");
         //List<VisitedLocation
-        String json = gson.toJson(userService.getVisitedLocationsByUsername(userName));
-        System.out.println("JSON RESPONSE: " + json);
-        return json;
+        //String json = gson.toJson(userService.getVisitedLocationsByUsername(userName));
+        //System.out.println("JSON RESPONSE: " + json);
+        //return json;
+        return userService.getVisitedLocationsByUsername(userName);
         //return gson.toJson(userService.getVisitedLocationsByUsername(userName));
     }
 
@@ -104,7 +123,7 @@ public class UserServiceController {
     @PostMapping("user/trackAllUserLocations")
     public boolean trackAllUserLocations() {
         logger.info("/trackAllUserLocations endpoint called");
-        System.out.println("TRACK ALL USERS");
+        //System.out.println("TRACK ALL USERS");
         return userService.trackAllUserLocations();
     }
 
